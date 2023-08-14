@@ -16,6 +16,8 @@ pipeline {
         stage('Ejecución') {
             steps {
                 script {
+                    sh 'docker pull mongo:latest'
+                    sh 'docker run -d --name mongodb-container -p 27017:27017 mongo:latest'
                     sh 'python app.py'
                 }
             }
@@ -24,6 +26,8 @@ pipeline {
 
     post {
         always {
+            sh 'docker stop mongodb-container'
+            sh 'docker rm mongodb-container'
             sh 'deactivate'
         }
     }
